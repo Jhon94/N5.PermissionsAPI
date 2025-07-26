@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N5.Permissions.API", "N5.Permissions\N5.Permissions.API.csproj", "{FB1F8102-88DE-4763-8689-875137884E89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "N5.Permissions.API", "N5.Permissions\N5.Permissions.API.csproj", "{FB1F8102-88DE-4763-8689-875137884E89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N5.Permissions.Application", "N5.Permissions.Application\N5.Permissions.Application.csproj", "{C968CE1A-500C-4F83-AD19-5549543E09CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "N5.Permissions.Application", "N5.Permissions.Application\N5.Permissions.Application.csproj", "{C968CE1A-500C-4F83-AD19-5549543E09CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N5.Permissions.Domain", "N5.Permissions.Domain\N5.Permissions.Domain.csproj", "{BB538614-8E4A-4982-A5CB-D5DDA5A17F5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "N5.Permissions.Domain", "N5.Permissions.Domain\N5.Permissions.Domain.csproj", "{BB538614-8E4A-4982-A5CB-D5DDA5A17F5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N5.Permissions.Infrastructure", "N5.Permissions.Infrastructure\N5.Permissions.Infrastructure.csproj", "{7B5E8F07-149E-46CA-AFF8-DD11F18B5C2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "N5.Permissions.Infrastructure", "N5.Permissions.Infrastructure\N5.Permissions.Infrastructure.csproj", "{7B5E8F07-149E-46CA-AFF8-DD11F18B5C2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N5.Permissions.UnitTests", "N5.Permissions.UnitTests\N5.Permissions.UnitTests.csproj", "{E7E32AB6-244C-4AD4-AB35-2CD69211EEA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{7B5E8F07-149E-46CA-AFF8-DD11F18B5C2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B5E8F07-149E-46CA-AFF8-DD11F18B5C2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B5E8F07-149E-46CA-AFF8-DD11F18B5C2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7E32AB6-244C-4AD4-AB35-2CD69211EEA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7E32AB6-244C-4AD4-AB35-2CD69211EEA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7E32AB6-244C-4AD4-AB35-2CD69211EEA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7E32AB6-244C-4AD4-AB35-2CD69211EEA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

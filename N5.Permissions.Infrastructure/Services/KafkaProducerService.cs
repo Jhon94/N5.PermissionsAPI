@@ -9,25 +9,38 @@ namespace N5.Permissions.Infrastructure.Services
 {
     public class KafkaProducerService : IKafkaProducerService
     {
-        private readonly IProducer<string, string> _producer;
+        private readonly IProducer<string, string>? _producer;
         private readonly ILogger<KafkaProducerService> _logger;
         private readonly string _topicName;
+        private readonly bool _isAvailable;
 
         public KafkaProducerService(IConfiguration configuration, ILogger<KafkaProducerService> logger)
         {
             _logger = logger;
             _topicName = configuration["KafkaSettings:Topic"] ?? "permissions-operations";
 
-            var config = new ProducerConfig
+            try
             {
-                BootstrapServers = configuration["KafkaSettings:BootstrapServers"] ?? "localhost:9092",
-                Acks = Acks.All,
-                MessageSendMaxRetries = 3,
-                EnableIdempotence = true,
-                MessageTimeoutMs = 30000
-            };
+                var config = new ProducerConfig
+                {
+                    BootstrapServers = configuration["KafkaSettings:BootstrapServers"] ?? "localhost:9092",
+                    Acks = Acks.All,
+                    MessageSendMaxRetries = 3,
+                    EnableIdempotence = true,
+                    MessageTimeoutMs = 10000, // Reducido para fallar más rápido
+                    RequestTimeoutMs = 5000   // Timeout más corto
+                };
 
-            _producer = new ProducerBuilder<string, string>(config).Build();
+                _producer = new ProducerBuilder<string, string>(config).Build();
+                _isAvailable = true;
+                _logger.LogInformation("Kafka producer initialized successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to initialize Kafka producer - will continue in mock mode");
+                _producer = null;
+                _isAvailable = false;
+            }
         }
 
         public async Task SendMessageAsync(Guid id, string operation)
@@ -38,7 +51,6 @@ namespace N5.Permissions.Infrastructure.Services
                 NameOperation = operation,
                 Timestamp = DateTime.UtcNow
             };
-
             await SendMessageAsync(message);
         }
 
@@ -46,6 +58,13 @@ namespace N5.Permissions.Infrastructure.Services
         {
             try
             {
+                if (!_isAvailable || _producer == null)
+                {
+                    _logger.LogWarning("MOCK: Kafka not available - simulating message: {Message}",
+                        JsonSerializer.Serialize(message));
+                    return;
+                }
+
                 var messageJson = JsonSerializer.Serialize(message);
                 var kafkaMessage = new Message<string, string>
                 {
@@ -55,25 +74,30 @@ namespace N5.Permissions.Infrastructure.Services
                 };
 
                 var deliveryResult = await _producer.ProduceAsync(_topicName, kafkaMessage);
-
-                _logger.LogInformation("Message delivered to {Topic} partition {Partition} at offset {Offset}",
+                _logger.LogInformation("✅ Message delivered to {Topic} partition {Partition} at offset {Offset}",
                     deliveryResult.Topic, deliveryResult.Partition, deliveryResult.Offset);
             }
             catch (ProduceException<string, string> ex)
             {
-                _logger.LogError(ex, "Failed to deliver message to Kafka: {Error}", ex.Error.Reason);
-                throw;
+                _logger.LogWarning(ex, "⚠️  Failed to deliver message to Kafka - continuing without Kafka: {Error}", ex.Error.Reason);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error sending message to Kafka");
-                throw;
+                _logger.LogWarning(ex, "⚠️  Error sending message to Kafka - continuing without Kafka");
             }
         }
 
         public void Dispose()
         {
-            _producer?.Dispose();
+            try
+            {
+                _producer?.Flush(TimeSpan.FromSeconds(5));
+                _producer?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Error disposing Kafka producer");
+            }
         }
     }
 }
