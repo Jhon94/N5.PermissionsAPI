@@ -14,8 +14,4 @@
 	<PackageReference Include="Microsoft.Identity.Client" Version="4.61.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Mappings\" />
-  </ItemGroup>
-
 </Project>

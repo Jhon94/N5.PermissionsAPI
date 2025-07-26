@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using N5.Permissions.Application.Behaviors;
 using System.Reflection;
 
 namespace N5.Permissions.Application.Extensions
@@ -10,11 +12,7 @@ namespace N5.Permissions.Application.Extensions
             // Add MediatR
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
-            // Add AutoMapper (opcional si decido usarlo)
-            // services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
-            // Add FluentValidation (opcional si decido usarlo)
-            // services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
             return services;
         }

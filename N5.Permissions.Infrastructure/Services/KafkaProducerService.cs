@@ -27,8 +27,8 @@ namespace N5.Permissions.Infrastructure.Services
                     Acks = Acks.All,
                     MessageSendMaxRetries = 3,
                     EnableIdempotence = true,
-                    MessageTimeoutMs = 10000, // Reducido para fallar más rápido
-                    RequestTimeoutMs = 5000   // Timeout más corto
+                    MessageTimeoutMs = 10000,
+                    RequestTimeoutMs = 5000
                 };
 
                 _producer = new ProducerBuilder<string, string>(config).Build();
@@ -74,16 +74,16 @@ namespace N5.Permissions.Infrastructure.Services
                 };
 
                 var deliveryResult = await _producer.ProduceAsync(_topicName, kafkaMessage);
-                _logger.LogInformation("✅ Message delivered to {Topic} partition {Partition} at offset {Offset}",
+                _logger.LogInformation("Message delivered to {Topic} partition {Partition} at offset {Offset}",
                     deliveryResult.Topic, deliveryResult.Partition, deliveryResult.Offset);
             }
             catch (ProduceException<string, string> ex)
             {
-                _logger.LogWarning(ex, "⚠️  Failed to deliver message to Kafka - continuing without Kafka: {Error}", ex.Error.Reason);
+                _logger.LogWarning(ex, "Failed to deliver message to Kafka - continuing without Kafka: {Error}", ex.Error.Reason);
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "⚠️  Error sending message to Kafka - continuing without Kafka");
+                _logger.LogWarning(ex, "Error sending message to Kafka - continuing without Kafka");
             }
         }
 

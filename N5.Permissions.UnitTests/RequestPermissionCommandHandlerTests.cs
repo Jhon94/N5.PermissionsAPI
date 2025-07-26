@@ -21,13 +21,11 @@ namespace N5.Permissions.UnitTests
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _elasticsearchServiceMock = new Mock<IElasticsearchService>();
             _kafkaServiceMock = new Mock<IKafkaProducerService>();
-            _loggerMock = new Mock<ILogger<RequestPermissionCommandHandler>>();
 
             _handler = new RequestPermissionCommandHandler(
                 _unitOfWorkMock.Object,
                 _elasticsearchServiceMock.Object,
-                _kafkaServiceMock.Object,
-                _loggerMock.Object);
+                _kafkaServiceMock.Object);
         }
 
         [Fact]

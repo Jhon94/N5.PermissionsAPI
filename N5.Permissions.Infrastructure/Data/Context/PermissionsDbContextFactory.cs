@@ -9,7 +9,7 @@ namespace N5.Permissions.Infrastructure.Data.Context
         {
             var optionsBuilder = new DbContextOptionsBuilder<PermissionsDbContext>();
 
-            var connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=N5PermissionsDB;Integrated Security=true;TrustServerCertificate=true;";
+            var connectionString = "Server=localhost,1433;Database=N5PermissionsDB_Dev;User Id=sa;Password=Password123!;TrustServerCertificate=true;Encrypt=false;";
 
             optionsBuilder.UseSqlServer(connectionString);
 

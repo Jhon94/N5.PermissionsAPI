@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using Moq;
 using N5.Permissions.Application.Queries.GetPermissions;
 using N5.Permissions.Domain.Entities;
@@ -11,19 +10,16 @@ namespace N5.Permissions.UnitTests
     {
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly Mock<IKafkaProducerService> _kafkaServiceMock;
-        private readonly Mock<ILogger<GetPermissionsQueryHandler>> _loggerMock;
         private readonly GetPermissionsQueryHandler _handler;
 
         public GetPermissionsQueryHandlerTests()
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _kafkaServiceMock = new Mock<IKafkaProducerService>();
-            _loggerMock = new Mock<ILogger<GetPermissionsQueryHandler>>();
 
             _handler = new GetPermissionsQueryHandler(
                 _unitOfWorkMock.Object,
-                _kafkaServiceMock.Object,
-                _loggerMock.Object);
+                _kafkaServiceMock.Object);
         }
 
         [Fact]

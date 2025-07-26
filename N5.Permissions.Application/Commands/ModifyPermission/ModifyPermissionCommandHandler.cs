@@ -11,23 +11,19 @@ namespace N5.Permissions.Application.Commands.ModifyPermission
         private readonly IUnitOfWork _unitOfWork;
         private readonly IElasticsearchService _elasticsearchService;
         private readonly IKafkaProducerService _kafkaService;
-        private readonly ILogger<ModifyPermissionCommandHandler> _logger;
 
         public ModifyPermissionCommandHandler(
             IUnitOfWork unitOfWork,
             IElasticsearchService elasticsearchService,
-            IKafkaProducerService kafkaService,
-            ILogger<ModifyPermissionCommandHandler> logger)
+            IKafkaProducerService kafkaService)
         {
             _unitOfWork = unitOfWork;
             _elasticsearchService = elasticsearchService;
             _kafkaService = kafkaService;
-            _logger = logger;
         }
 
         public async Task<PermissionDto> Handle(ModifyPermissionCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Processing modify permission for ID: {PermissionId}", request.Id);
 
             try
             {
@@ -79,14 +75,12 @@ namespace N5.Permissions.Application.Commands.ModifyPermission
 
                 await _unitOfWork.CommitTransactionAsync();
 
-                _logger.LogInformation("Permission modified successfully with ID: {PermissionId}", updatedPermission.Id);
 
                 return permissionDto;
             }
             catch (Exception ex)
             {
                 await _unitOfWork.RollbackTransactionAsync();
-                _logger.LogError(ex, "Error modifying permission with ID: {PermissionId}", request.Id);
                 throw;
             }
         }

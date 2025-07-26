@@ -9,28 +9,21 @@ namespace N5.Permissions.Application.Queries.GetPermissions
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IKafkaProducerService _kafkaService;
-        private readonly ILogger<GetPermissionsQueryHandler> _logger;
 
         public GetPermissionsQueryHandler(
             IUnitOfWork unitOfWork,
-            IKafkaProducerService kafkaService,
-            ILogger<GetPermissionsQueryHandler> logger)
+            IKafkaProducerService kafkaService)
         {
             _unitOfWork = unitOfWork;
             _kafkaService = kafkaService;
-            _logger = logger;
         }
 
         public async Task<IEnumerable<PermissionDto>> Handle(GetPermissionsQuery request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Processing get permissions query");
-
             try
             {
-                // Get permissions from database
                 var permissions = await _unitOfWork.Permissions.GetAllAsync();
 
-                // Apply filters if provided
                 if (!string.IsNullOrEmpty(request.EmployeeName))
                 {
                     permissions = permissions.Where(p =>
@@ -53,7 +46,6 @@ namespace N5.Permissions.Application.Queries.GetPermissions
                     permissions = permissions.Where(p => p.PermissionDate <= request.ToDate.Value);
                 }
 
-                // Convert to DTOs
                 var permissionDtos = permissions.Select(p => new PermissionDto
                 {
                     Id = p.Id,
@@ -66,17 +58,13 @@ namespace N5.Permissions.Application.Queries.GetPermissions
                     UpdatedAt = p.UpdatedAt
                 }).ToList();
 
-                // Send message to Kafka
                 await _kafkaService.SendMessageAsync(Guid.NewGuid(), "get");
-
-                _logger.LogInformation("Retrieved {Count} permissions", permissionDtos.Count);
 
                 return permissionDtos;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error retrieving permissions");
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }

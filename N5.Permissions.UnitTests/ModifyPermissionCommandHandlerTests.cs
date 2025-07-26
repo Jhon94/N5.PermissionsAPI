@@ -13,7 +13,6 @@ namespace N5.Permissions.UnitTests
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly Mock<IElasticsearchService> _elasticsearchServiceMock;
         private readonly Mock<IKafkaProducerService> _kafkaServiceMock;
-        private readonly Mock<ILogger<ModifyPermissionCommandHandler>> _loggerMock;
         private readonly ModifyPermissionCommandHandler _handler;
 
         public ModifyPermissionCommandHandlerTests()
@@ -21,13 +20,11 @@ namespace N5.Permissions.UnitTests
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _elasticsearchServiceMock = new Mock<IElasticsearchService>();
             _kafkaServiceMock = new Mock<IKafkaProducerService>();
-            _loggerMock = new Mock<ILogger<ModifyPermissionCommandHandler>>();
 
             _handler = new ModifyPermissionCommandHandler(
                 _unitOfWorkMock.Object,
                 _elasticsearchServiceMock.Object,
-                _kafkaServiceMock.Object,
-                _loggerMock.Object);
+                _kafkaServiceMock.Object);
         }
 
         [Fact]
