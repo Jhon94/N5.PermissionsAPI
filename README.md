@@ -76,8 +76,22 @@ cd N5.PermissionsAPI
 ```
 
 2. **Start the infrastructure with Docker Compose**
+
+**Option A: Start all services at once**
 ```bash
 docker-compose up -d
+```
+
+**Option B: Start services individually**
+```bash
+# Start SQL Server
+docker-compose up -d sqlserver
+
+# Start Elasticsearch
+docker-compose up -d elasticsearch
+
+# Start Kafka (includes Zookeeper dependency)
+docker-compose up -d kafka
 ```
 
 3. **Verify services are running**
@@ -167,7 +181,27 @@ zookeeper:
 
 ### Individual Docker Commands
 
-If you prefer to run services individually:
+You can choose between three approaches to run the services:
+
+#### Option 1: Docker Compose - All Services
+```bash
+docker-compose up -d
+```
+
+#### Option 2: Docker Compose - Individual Services
+```bash
+# Start SQL Server only
+docker-compose up -d sqlserver
+
+# Start Elasticsearch only
+docker-compose up -d elasticsearch
+
+# Start Kafka and Zookeeper
+docker-compose up -d kafka
+```
+
+#### Option 3: Pure Docker Commands
+If you prefer to run services with individual Docker commands:
 
 **SQL Server:**
 ```bash
