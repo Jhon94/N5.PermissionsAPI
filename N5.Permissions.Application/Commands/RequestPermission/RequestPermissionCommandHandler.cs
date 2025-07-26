@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.Extensions.Logging;
 using N5.Permissions.Application.DTOs;
 using N5.Permissions.Domain.Entities;
 using N5.Permissions.Domain.Exceptions;
@@ -77,7 +76,7 @@ namespace N5.Permissions.Application.Commands.RequestPermission
             catch (Exception ex)
             {
                 await _unitOfWork.RollbackTransactionAsync();
-                throw;
+                throw new Exception(ex.Message);
             }
         }
     }
